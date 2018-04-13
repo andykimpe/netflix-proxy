@@ -4,13 +4,25 @@
 
 find a Debian or Ubuntu box with root on a clean public IP and run:
 ```
+cat > /etc/apt/sources.list <<EOF
+deb http://fr.archive.ubuntu.com/ubuntu $(lsb_release -sc) main restricted universe multiverse
+deb-src http://fr.archive.ubuntu.com/ubuntu $(lsb_release -sc) main restricted universe multiverse
+deb http://fr.archive.ubuntu.com/ubuntu $(lsb_release -sc)-security main restricted universe multiverse
+deb-src http://fr.archive.ubuntu.com/ubuntu $(lsb_release -sc)-security main restricted universe multiverse
+deb http://fr.archive.ubuntu.com/ubuntu $(lsb_release -sc)-updates main restricted universe multiverse
+deb-src http://fr.archive.ubuntu.com/ubuntu $(lsb_release -sc)-updates main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu $(lsb_release -sc)-security main restricted universe multiverse
+deb-src http://security.ubuntu.com/ubuntu $(lsb_release -sc)-security main restricted universe multiverse
+deb http://archive.canonical.com/ubuntu $(lsb_release -sc) partner
+deb-src http://archive.canonical.com/ubuntu $(lsb_release -sc) partner
+EOF
 apt-get update\
 && apt-get -y dist-upgrade\
 && apt-get -y install vim dnsutils curl sudo build-essential\
 && curl -sSL https://get.docker.com/ | sh\
 && mkdir -p /opt/wilmaa-proxy\
 && cd /opt/wilmaa-proxy\
-&& curl -L https://github.com/ab77/netflix-proxy/archive/latest.tar.gz| tar xz --strip-components=1\
+&& curl -L https://github.com/andykimpe/netflix-proxy/archive/latest.tar.gz| tar xz --strip-components=1\
 && ./build.sh
 ```
 
