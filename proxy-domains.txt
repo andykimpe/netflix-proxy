@@ -1,5 +1,6 @@
 wilmaa.com
 www.wilmaa.com
+app.wilmaa.com
 geo.wilmaa.com
 streams.wilmaa.com
 teleboy.ch
