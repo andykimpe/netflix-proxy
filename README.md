@@ -5,10 +5,10 @@
 find a Debian or Ubuntu box with root on a clean public IP and run:
 ```
 apt-get update\
-  && apt-get -y install vim dnsutils curl sudo\
+  && apt-get -y install vim dnsutils curl sudo build-essential\
   && curl -sSL https://get.docker.com/ | sh\
-  && mkdir -p ~/netflix-proxy\
-  && cd ~/netflix-proxy\
+  && mkdir -p /opt/wilmaa-proxy\
+  && cd /opt/wilmaa-proxy\
   && curl -L https://github.com/ab77/netflix-proxy/archive/latest.tar.gz\
   | tar xz --strip-components=1\
   && ./build.sh
