@@ -104,12 +104,12 @@ IPADDR=$(get_ipaddr)
 EXTIP=$(get_ext_ipaddr 4)
 
 IPV6=0
-if cat /proc/net/if_inet6 | grep -v lo | grep -v fe80 > /dev/null\
-  && $(which curl) mgmt.unzoner.com --fail --silent -6 > /dev/null; then
-    IPV6=1
-    IPADDR6=$(get_ipaddr6)
-    EXTIP6=$(get_ext_ipaddr 6)
-fi
+#if cat /proc/net/if_inet6 | grep -v lo | grep -v fe80 > /dev/null\
+#  && $(which curl) mgmt.unzoner.com --fail --silent -6 > /dev/null; then
+#    IPV6=1
+#    IPADDR6=$(get_ipaddr6)
+#    EXTIP6=$(get_ext_ipaddr 6)
+#fi
 
 # obtain client (home) ip address and address family
 if ! [ ${CLIENTIP} ]; then
@@ -119,19 +119,19 @@ fi
 IS_CLIENT_IPV4=0
 if ! is_ipv4 ${CLIENTIP}; then IS_CLIENT_IPV4=1; fi
 
-IS_CLIENT_IPV6=1
-if [[ "${IPV6}" == '1' ]]; then
-    if is_ipv6 ${CLIENTIP}; then
-        IS_CLIENT_IPV6=0
-    fi
-fi
+#IS_CLIENT_IPV6=1
+#if [[ "${IPV6}" == '1' ]]; then
+#    if is_ipv6 ${CLIENTIP}; then
+#        IS_CLIENT_IPV6=0
+#    fi
+#fi
 
 # diagnostics info
 debug="$0: build=${DOCKER_BUILD} client=${CLIENTIP} is_client_ipv4=${IS_CLIENT_IPV4} ipaddr=${IPADDR} extip=${EXTIP}"
 
-if [[ "${IPV6}" == '1' ]]; then
-    debug_v6="$0: is_client_ipv6=${IS_CLIENT_IPV6} ipaddr6=${IPADDR6} extip6=${EXTIP6}"
-fi
+#if [[ "${IPV6}" == '1' ]]; then
+#    debug_v6="$0: is_client_ipv6=${IS_CLIENT_IPV6} ipaddr6=${IPADDR6} extip6=${EXTIP6}"
+#fi
 
 sudo touch ${CWD}/netflix-proxy.log
 log_action_begin_msg "log diagnostics info"
@@ -139,12 +139,12 @@ printf "build=${DOCKER_BUILD} client=${CLIENTIP} local=${IPADDR} public=${EXTIP}
 printf "${debug}\n" &>> ${CWD}/netflix-proxy.log
 log_action_end_msg $?
 
-if [[ ${debug_v6} ]]; then
-    log_action_begin_msg "log diagnostics info (IPv6)"
-    printf "local6=${IPADDR6} public6=${EXTIP6}\n"
-    printf "${debug_v6}\n" &>> ${CWD}/netflix-proxy.log
-    log_action_end_msg $?
-fi
+#if [[ ${debug_v6} ]]; then
+#    log_action_begin_msg "log diagnostics info (IPv6)"
+#    printf "local6=${IPADDR6} public6=${EXTIP6}\n"
+#    printf "${debug_v6}\n" &>> ${CWD}/netflix-proxy.log
+#    log_action_end_msg $?
+#fi
 
 # switch to working directory
 pushd ${CWD} &>> ${CWD}/netflix-proxy.log
@@ -155,9 +155,9 @@ if [[ -n "${CLIENTIP}" ]]; then
     if [[ "${IS_CLIENT_IPV4}" == '0' ]]; then
         sudo iptables -t nat -A PREROUTING -s ${CLIENTIP}/32 -i ${IFACE} -j ACCEPT
     fi
-    if [[ "${IS_CLIENT_IPV6}" == '0' ]]; then
-        sudo ip6tables -t nat -A PREROUTING -s ${CLIENTIP}/128 -i ${IFACE} -j ACCEPT
-    fi
+#    if [[ "${IS_CLIENT_IPV6}" == '0' ]]; then
+#        sudo ip6tables -t nat -A PREROUTING -s ${CLIENTIP}/128 -i ${IFACE} -j ACCEPT
+#    fi
     log_action_end_msg $?
 else
     log_action_cont_msg "unable to resolve and authorise client ip"
