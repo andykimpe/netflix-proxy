@@ -22,7 +22,7 @@ apt-get update\
 && curl -sSL https://get.docker.com/ | sh\
 && mkdir -p /opt/wilmaa-proxy\
 && cd /opt/wilmaa-proxy\
-&& curl -L https://github.com/andykimpe/netflix-proxy/archive/latest.tar.gz| tar xz --strip-components=1\
+&& curl -L https://github.com/andykimpe/netflix-proxy/archive/master.tar.gz| tar xz --strip-components=1\
 && ./build.sh
 ```
 
