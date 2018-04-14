@@ -180,28 +180,28 @@ sudo iptables -t nat -A PREROUTING -i ${IFACE} -p tcp --dport 80 -j REDIRECT --t
   && sudo iptables -A INPUT -j REJECT --reject-with icmp-host-prohibited
 log_action_end_msg $?
 
-#log_action_begin_msg "adding IPv6 iptables rules"
-#sudo ip6tables -t nat -A PREROUTING -i ${IFACE} -p tcp --dport 80 -j REDIRECT --to-port 8080\
-#  && sudo ip6tables -t nat -A PREROUTING -i ${IFACE} -p tcp --dport 443 -j REDIRECT --to-port 8080\
-#  && sudo ip6tables -t nat -A PREROUTING -i ${IFACE} -p udp --dport 53 -j REDIRECT --to-port 5353\
-#  && sudo iptables -t nat -A POSTROUTING -o ${IFACE} -j MASQUERADE\
-#  && sudo ip6tables -A INPUT -p ipv6-icmp -j ACCEPT\
-#  && sudo ip6tables -A INPUT -i lo -j ACCEPT\
-#  && sudo ip6tables -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT\
-#  && sudo ip6tables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\
-#  && sudo ip6tables -A INPUT -p udp -m udp --dport 53 -j ACCEPT\
-#  && sudo ip6tables -A INPUT -p udp -m udp --dport 5353 -j ACCEPT\
-#  && sudo ip6tables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT\
-#  && sudo ip6tables -A INPUT -p tcp -m tcp --dport 8080 -j ACCEPT\
-#  && sudo ip6tables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT\
-#  && sudo ip6tables -A INPUT -j REJECT --reject-with icmp6-adm-prohibited
-#log_action_end_msg $?
+log_action_begin_msg "adding IPv6 iptables rules"
+sudo ip6tables -t nat -A PREROUTING -i ${IFACE} -p tcp --dport 80 -j REDIRECT --to-port 8080\
+  && sudo ip6tables -t nat -A PREROUTING -i ${IFACE} -p tcp --dport 443 -j REDIRECT --to-port 8080\
+  && sudo ip6tables -t nat -A PREROUTING -i ${IFACE} -p udp --dport 53 -j REDIRECT --to-port 5353\
+  && sudo iptables -t nat -A POSTROUTING -o ${IFACE} -j MASQUERADE\
+  && sudo ip6tables -A INPUT -p ipv6-icmp -j ACCEPT\
+  && sudo ip6tables -A INPUT -i lo -j ACCEPT\
+  && sudo ip6tables -A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT\
+  && sudo ip6tables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT\
+  && sudo ip6tables -A INPUT -p udp -m udp --dport 53 -j ACCEPT\
+  && sudo ip6tables -A INPUT -p udp -m udp --dport 5353 -j ACCEPT\
+  && sudo ip6tables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT\
+  && sudo ip6tables -A INPUT -p tcp -m tcp --dport 8080 -j ACCEPT\
+  && sudo ip6tables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT\
+  && sudo ip6tables -A INPUT -j REJECT --reject-with icmp6-adm-prohibited
+log_action_end_msg $?
 	
-## check if public IPv6 access is available
-#log_action_begin_msg "creating Docker and sniproxy configuration templates"
-#sudo cp ${CWD}/docker-sniproxy/sniproxy.conf.template ${CWD}/docker-sniproxy/sniproxy.conf &>> ${CWD}/netflix-proxy.log\
-#  && sudo cp ${CWD}/docker-compose.yml.template ${CWD}/docker-compose.yml &>> ${CWD}/netflix-proxy.log
-#log_action_end_msg $?
+# check if public IPv6 access is available
+log_action_begin_msg "creating Docker and sniproxy configuration templates"
+sudo cp ${CWD}/docker-sniproxy/sniproxy.conf.template ${CWD}/docker-sniproxy/sniproxy.conf &>> ${CWD}/netflix-proxy.log\
+  && sudo cp ${CWD}/docker-compose.yml.template ${CWD}/docker-compose.yml &>> ${CWD}/netflix-proxy.log
+log_action_end_msg $?
 
 log_action_begin_msg "disabling Docker iptables control"
 cp ${CWD}/daemon.json /etc/docker/
@@ -222,9 +222,9 @@ fi
 log_action_begin_msg "installing iptables|netfilter-persistent service"
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true\
   | sudo debconf-set-selections &>> ${CWD}/netflix-proxy.log\
-# echo iptables-persistent iptables-persistent/autosave_v6 boolean true\
- # | sudo debconf-set-selections &>> ${CWD}/netflix-proxy.log\
-  sudo apt-get -y install iptables-persistent &>> ${CWD}/netflix-proxy.log
+  && echo iptables-persistent iptables-persistent/autosave_v6 boolean true\
+  | sudo debconf-set-selections &>> ${CWD}/netflix-proxy.log\
+  && sudo apt-get -y install iptables-persistent &>> ${CWD}/netflix-proxy.log
 log_action_end_msg $?
 
 # Ubuntu and Debian have different service names for iptables-persistent service
